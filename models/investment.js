@@ -30,10 +30,7 @@ const Investment = sequelize.define('Investment', {
 });
 
 Investment.associate = (models) => {
-    // Investment belongs to the investor who made it
     Investment.belongsTo(models.User, { foreignKey: 'userId', as: 'investor' });
-
-    // Investment belongs to the deal it was made in
     Investment.belongsTo(models.Deal, { foreignKey: 'dealId', as: 'deal' });
 };
 

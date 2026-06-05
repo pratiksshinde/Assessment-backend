@@ -35,7 +35,6 @@ const InvestorPreference = sequelize.define('InvestorPreference', {
 });
 
 InvestorPreference.associate = (models) => {
-    // Preference profile belongs to one investor
     InvestorPreference.belongsTo(models.User, { foreignKey: 'userId', as: 'investor' });
 };
 

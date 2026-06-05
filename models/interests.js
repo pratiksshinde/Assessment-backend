@@ -26,10 +26,7 @@ const Interest = sequelize.define('Interest', {
 });
 
 Interest.associate = (models) => {
-    // Interest belongs to the investor who expressed it
     Interest.belongsTo(models.User, { foreignKey: 'userId', as: 'investor' });
-
-    // Interest belongs to the deal it was expressed for
     Interest.belongsTo(models.Deal, { foreignKey: 'dealId', as: 'deal' });
 };
 

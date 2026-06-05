@@ -74,13 +74,8 @@ const Deal = sequelize.define('Deal', {
 });
 
 Deal.associate = (models) => {
-    // Deal belongs to the corporate user who created it
     Deal.belongsTo(models.User, { foreignKey: 'userId', as: 'postedBy' });
-
-    // A deal can receive many interest expressions
     Deal.hasMany(models.Interest, { foreignKey: 'dealId', as: 'interests' });
-
-    // A deal can receive many investments
     Deal.hasMany(models.Investment, { foreignKey: 'dealId', as: 'investments' });
 };
 

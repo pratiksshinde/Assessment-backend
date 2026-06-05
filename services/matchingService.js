@@ -7,14 +7,12 @@ const CACHE_TTL = 60 * 10;
 const getRecommendedDeals = async (userId) => {
   const cacheKey = `recommended:${userId}`;
 
-  // 1. Try cache first
   const cached = await redis.get(cacheKey);
   if (cached) {
     console.log('Cache hit for user', userId);
     return JSON.parse(cached);
   }
 
-  // 2. Cache miss — run the algorithm
   const prefs = await InvestorPreference.findOne({ where: { userId } });
   if (!prefs) throw new Error('Investor profile not set up');
 
@@ -22,7 +20,7 @@ const getRecommendedDeals = async (userId) => {
     where: { isDeleted: false, status: { [Op.ne]: 'closed' } }
   });
 
-  const maxROI = Math.max(...deals.map(x => x.ROI)); // moved outside loop
+  const maxROI = Math.max(...deals.map(x => x.ROI)); 
 
   const scored = deals.map(deal => {
     const d = deal.toJSON();
@@ -37,10 +35,10 @@ const getRecommendedDeals = async (userId) => {
     const popularityScore = d.targetAmount > 0 ? Math.min(d.currentRaisedAmount / d.targetAmount, 1) : 0;
 
     const totalScore =
-      riskScore       * 0.30 +
-      industryScore   * 0.25 +
-      budgetScore     * 0.20 +
-      roiScore        * 0.15 +
+      riskScore * 0.30 +
+      industryScore * 0.25 +
+      budgetScore * 0.20 +
+      roiScore * 0.15 +
       popularityScore * 0.10;
 
     return { ...d, matchScore: parseFloat(totalScore.toFixed(3)) };
@@ -48,7 +46,6 @@ const getRecommendedDeals = async (userId) => {
 
   const result = scored.sort((a, b) => b.matchScore - a.matchScore);
 
-  // 3. Store in Redis with TTL
   await redis.set(cacheKey, JSON.stringify(result), 'EX', CACHE_TTL);
 
   return result;
