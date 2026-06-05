@@ -89,8 +89,11 @@ const recommended = async (req, res) => {
 const analytics = async (req, res) => {
   try { 
     const { id } = req.params;
-    const deal = await Deal.findByPk(id); // ← was using undefined `Deal` variable
+    const deal = await Deal.findByPk(id); 
     if (!deal) return res.status(404).json({ message: 'Deal not found' });
+    if (deal.userId !== req.user.id) {
+     return res.status(403).json({ message: 'Not authorized' });
+    }
 
     const totalInvestors  = await Investment.count({ where: { dealId: id } });
     const totalInterested = await Interest.count({ where: { dealId: id } });

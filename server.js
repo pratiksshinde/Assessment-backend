@@ -16,10 +16,12 @@ app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 const authRoutes = require('./routes/authRoutes');
 const dealRoutes = require('./routes/dealRoutes');
 const investmentRoutes = require('./routes/investmentRoutes');
+const profileRoutes = require('./routes/profileRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api', dealRoutes);
 app.use('/api', investmentRoutes);
+app.use('/api', profileRoutes);
 
 
 app.use((err, req, res, next) => {

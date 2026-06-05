@@ -10,7 +10,7 @@ const InvestorPreference = sequelize.define('InvestorPreference', {
     userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true, // one profile per investor
+        unique: true, 
         references: { model: 'Users', key: 'id' }
     },
     riskAppetite: {
